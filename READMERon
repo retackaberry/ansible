@@ -1,0 +1,15 @@
+This is a new ansible repo that is synced on git. There's a dir under ~/dev called oldansible that contains
+all the old good ansible files. Plan is to move them into this synced directory one at a time as 
+they're tested.
+
+Some simple ansible commands:
+ansible all -m ping -- gives a pong response
+ansible all -m setup -- gives info about the remote machines
+
+Files:
+  install_sudoers.yml -- Make retackaberry a sudoer that doesn't need password. This account will then run all 
+                         other ansible accounts without password.
+
+  hello.yml -- Simple playbook to write a textfile into /tmp on the server. Mostly used to sanity check everything
+
+  
