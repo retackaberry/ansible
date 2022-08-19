@@ -1,0 +1,38 @@
+---
+
+- name: Setup Web Servers
+  hosts: ubuntu
+  become: true
+  tasks: 
+    - name: Install Apache2 on Ubuntu Servers
+      apt:
+        name: apache2
+        state: latest
+
+    - name: Install Apache2-bin on Ubuntu Servers
+      apt:
+        name: apache2-bin
+        state: latest   
+
+    - name: Enable Apache2 service
+      systemd:
+        name: "{{ web_service_name }}"
+
+    - name: Deploy web content
+      template:
+        src: index.htm.j2
+        dest: /var/www/html/index.htm
+        owner: "{{ web_user_name }}"
+        group: "{{ web_user_name }}"    
+
+    - name: Move web content into the correct location
+      copy:
+        src: /var/www/html/index.htm
+        remote_src: true
+        dest: /var/www/html/index.html
+
+    - name: Remove old htm file
+      file:
+        path: /var/www/html/index.htm
+        state: absent  
+        

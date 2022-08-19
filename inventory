@@ -1,7 +1,19 @@
 ---
 
 all:
-  hosts:
-    192.168.5.108:
-    192.168.5.126:
+  vars: 
+    server_age: "old"
+  children:
+    debian:
+      vars:
+        web_service_name: "apache2"
+        web_user_name: "www-data"
+      children:
+        ubuntu:
+          hosts:
+            maggie2.home:
+            maggie3.home:
+              server_age: "new"
+    raspbian:
+
 

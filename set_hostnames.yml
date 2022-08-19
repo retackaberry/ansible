@@ -1,0 +1,17 @@
+---
+
+- name: Set hostnames
+  hosts: ubuntu
+  become: true
+
+  tasks:
+  - name: Set each hostname
+    hostname:
+      name: "{{ inventory_hostname }}"
+
+  - name: Fix hosts file
+    template:
+      src=hosts.j2
+      dest=/etc/hosts
+
+
