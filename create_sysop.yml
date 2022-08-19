@@ -1,0 +1,23 @@
+---
+- name: Install sysop user
+  hosts: all
+  vars:
+   - sysop_password: '$6$KK3QJXblmds.S9Um$VScbHFbbBAy63DDuOkAZ8qljSiHs2M0snFAWqdTZI1Lelnkze.ek0Z5/1/Tc8IuIQOQvTQ1fKswtBMNhFbNdH/'
+  remote_user: retackaberry
+  become: true
+
+  tasks:
+   - name: Install sysop user
+     user:
+           name: sysop
+           shell: /bin/bash
+           password: "{{ sysop_password }}"
+           generate_ssh_key: true
+           ssh_key_file: /home/sysop/.ssh/id_ed25519
+           uid: 1001
+           groups: "sudo,adm,cdrom,dip,plugdev,lpadmin,sambashare"
+          
+   - name: Add sysop user to sudoers
+     copy:
+           dest: "/etc/sudoers.d/sysop"
+           content: "sysop ALL=(ALL) NOPASSWD: ALL"
