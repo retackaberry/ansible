@@ -16,8 +16,18 @@
            ssh_key_file: /home/sysop/.ssh/id_ed25519
            uid: 1001
            groups: "sudo,adm,cdrom,dip,plugdev,lpadmin,sambashare"
-          
+
    - name: Add sysop user to sudoers
      copy:
            dest: "/etc/sudoers.d/sysop"
            content: "sysop ALL=(ALL) NOPASSWD: ALL"
+
+
+   - name: test2
+     ansible.posix.authorized_key:
+       user: sysop
+       state: present
+       key: "{{ lookup('url', 'https://raw.githubusercontent.com/retackaberry/ansible/main/ron.keys', split_lines=False) }}"
+
+             
+
