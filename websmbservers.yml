@@ -1,18 +1,27 @@
 ---
 
 - name: Setup Web Servers
-  hosts: ubuntu
+  hosts: all
   become: true
-  tasks: 
-    - name: Install Apache2 on Ubuntu Servers
-      apt:
-        name: apache2
-        state: latest
 
-    - name: Install Apache2-bin on Ubuntu Servers
+  tasks:
+  - name: install updates
+    apt:
+      upgrade: dist
+      update_cache: true
+
+- hosts: webservers
+  become: true
+
+  tasks: 
+    - name: Install Apache2 and Apache2-bin on Ubuntu Servers
       apt:
-        name: apache2-bin
-        state: latest   
+        name: 
+          - apache2
+          - apache2-bin
+          - apache2-utils
+        state: latest
+        update_cache: true
 
     - name: Enable Apache2 service
       systemd:
@@ -36,3 +45,13 @@
         path: /var/www/html/index.htm
         state: absent  
         
+- hosts: fileservers
+  become: true
+  
+  tasks:
+    - name: install samba package
+      apt:
+        name: samba
+        state: latest
+        update_cache: true
+       

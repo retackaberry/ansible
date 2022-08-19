@@ -3,17 +3,15 @@
 all:
   vars: 
     server_age: "old"
+    web_service_name: "apache2"
+    web_user_name: "www-data" 
   children:
-    debian:
-      vars:
-        web_service_name: "apache2"
-        web_user_name: "www-data"
-      children:
-        ubuntu:
-          hosts:
-            maggie2.home:
-            maggie3.home:
-              server_age: "new"
-    raspbian:
+    webservers:
+      hosts:
+        maggie2.home:
+    fileservers:
+      hosts:    
+        maggie3.home:
+
 
 
