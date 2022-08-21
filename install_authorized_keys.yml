@@ -1,0 +1,33 @@
+---
+- name: Install sysop user
+  hosts: all
+  vars:
+   - users: sysop
+  remote_user: retackaberry
+  become: true
+
+  tasks:
+
+   - name: test2
+     ansible.posix.authorized_key:
+       user: "{{ users }}"
+       state: present
+       key: "{{ lookup('url', 'https://raw.githubusercontent.com/retackaberry/ansible/main/ron.keys', split_lines=False) }}"
+
+   - name: Copy dev package
+     copy:
+      src:  dev.tar.gz
+      dest: /home/sysop/dev.tar.gz
+      owner: sysop
+      group: sysop
+      mode: '0644'
+
+   - name: Copy system files
+     copy:
+      src:  ronsysfiles.tar.gz
+      dest: /home/sysop/ronsysfiles.tar.gz
+      owner: sysop
+      group: sysop
+      mode: '0644'
+             
+

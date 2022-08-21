@@ -1,7 +1,7 @@
 ---
 
 - name: Set hostnames
-  hosts: ubuntu
+  hosts: all
   become: true
 
   tasks:

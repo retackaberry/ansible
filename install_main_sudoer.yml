@@ -1,0 +1,17 @@
+---
+- name: Install sudo permissions for main account
+  hosts: all
+  gather_facts: no
+  become: true
+
+  tasks:
+    - name: Add retackaberry to sudoers
+      copy:
+           dest: "/etc/sudoers.d/retackaberry"
+           content: "retackaberry ALL=(ALL) NOPASSWD: ALL"
+
+    - name: Add authorized keys for retackaberry
+      ansible.posix.authorized_key:
+        user: retackaberry
+        state: present
+        key: "{{ lookup('url', 'https://raw.githubusercontent.com/retackaberry/ansible/main/ron.keys', split_lines=False) }}"

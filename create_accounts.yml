@@ -1,0 +1,74 @@
+---
+- name: Create Accounts
+  hosts: all
+  vars:
+   - sysop_password: '$6$KK3QJXblmds.S9Um$VScbHFbbBAy63DDuOkAZ8qljSiHs2M0snFAWqdTZI1Lelnkze.ek0Z5/1/Tc8IuIQOQvTQ1fKswtBMNhFbNdH/'
+   - users: sysop
+  remote_user: retackaberry
+  become: true
+
+  tasks:
+   - name: Install sysop user
+     user:
+           name: "{{ users }}"
+           shell: /bin/bash
+           password: "{{ sysop_password }}"
+           generate_ssh_key: true
+           ssh_key_file: /home/{{ users }}/.ssh/id_ed25519
+           uid: 1001
+           groups: "sudo,adm,cdrom,dip,plugdev,lpadmin,sambashare"
+
+   - name: Add sysop user to sudoers
+     copy:
+           dest: "/etc/sudoers.d/{{ users }}"
+           content: "{{ users }} ALL=(ALL) NOPASSWD: ALL"
+           owner: root
+           group: root
+           mode: 0440
+
+
+   - name: Add authorized keys
+     ansible.posix.authorized_key:
+       user: "{{ users }}"
+       state: present
+       key: "{{ lookup('url', 'https://raw.githubusercontent.com/retackaberry/ansible/main/ron.keys', split_lines=False) }}"
+
+   - name: Copy dev package
+     copy:
+      src:  dev.tar.gz
+      dest: /home/{{ users }}/dev.tar.gz
+      owner: "{{ users }}"
+      group: "{{ users }}"
+      mode: '0644'
+
+   - name: Copy system files
+     copy:
+      src:  ronsysfiles.tar.gz
+      dest: /home/sysop/ronsysfiles.tar.gz
+      owner: sysop
+      group: sysop
+      mode: '0644'
+             
+   - name: Unzip and untar user files
+     hosts: all
+     gather_facts: no
+     remote_user: retackaberry
+     become: true
+
+     tasks:
+       - name: install user files
+         become: true
+         shell: |
+         gunzip /home/sysop/ronsysfiles.tar.gz
+         gunzip /home/sysop/dev.tar.gz
+         tar --same-owner -xf /home/sysop/ronsysfiles.tar -C /home/sysop
+         tar --same-owner -xf /home/sysop/dev.tar -C /home/sysop
+         rm /home/sysop/*.tar
+         cp -p /home/sysop/ronsysfiles/.bashrc /home/sysop
+         cp -p /home/sysop/ronsysfiles/.bash_profile /home/sysop
+         mkdir /home/sysop/Pictures
+         chmod sysop /home/sysop/Pictures
+         chgrp sysop /home/sysop/Pictures
+         cp -p /home/sysop/ronsysfiles/*.jpg /home/sysop/Pictures
+         cat /home/sysop/ronsysfiles/hosts >> /etc/hosts
+

@@ -1,19 +1,11 @@
 ---
 
 - name: Update ubuntu servers
-  hosts: ubuntu
+  hosts: all
   become: true
   tasks:
     - apt:
         update_cache: true
-        upgrade: dist
-        autoremove: true
-
-- name: Update Raspbian servers
-  hosts: raspbian
-  tasks:
-    - apt:
-        update_cache: true 
         upgrade: dist
         autoremove: true
 
