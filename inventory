@@ -1,17 +1,3 @@
----
-
-all:
-  vars: 
-    server_age: "old"
-    web_service_name: "apache2"
-    web_user_name: "www-data" 
-  children:
-    webservers:
-      hosts:
-        maggie2.home:
-    fileservers:
-      hosts:    
-        maggie3.home:
-
-
-
+[all]
+pg1.home
+pg2.home

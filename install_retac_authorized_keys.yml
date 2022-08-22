@@ -1,0 +1,16 @@
+---
+
+# Run this playbook with "ansible-playbook --ask-pass install_retac_authorized_keys.yml"
+  
+  - name: Install authorized keys for retackaberry account
+    hosts: all
+    become: true
+
+    tasks:
+ 
+      - name: install the key
+        ansible.posix.authorized_key:
+          user: retackaberry
+          state: present
+          key: "{{ lookup('url', 'https://raw.githubusercontent.com/retackaberry/ansible/main/ron.keys', split_lines=False) }}"
+
