@@ -1,6 +1,8 @@
 ---
 - name: Install sudo permissions for main account
   hosts: all
+  environment:
+    ANSIBLE_HOST_KEY_CHECKING: false
   gather_facts: no
   become: true
 

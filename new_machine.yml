@@ -3,8 +3,7 @@
 - name: master playbook
   hosts: all
 
-- import_playbook: install_main_sudoers.yml
-- import_playbook: upgrade_servers.yml
 - import_playbook: set_hostnames.yml
+- import_playbook: upgrade_servers.yml
 - import_playbook: install_packages.yml
 - import_playbook: create_accounts.yml

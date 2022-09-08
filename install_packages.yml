@@ -1,0 +1,21 @@
+---
+- name: Install initial software
+  hosts: all
+  remote_user: retackaberry
+  become: true
+
+  tasks:
+    - name: apt update
+      shell: apt update
+      become: true
+
+    - name: Install pkgs
+      apt:
+       name: "{{ packages }}"
+      vars:
+        packages:
+         - jove
+         - apt-transport-https
+         - ca-certificates
+         - software-properties-common
+

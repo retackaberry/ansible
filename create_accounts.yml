@@ -16,7 +16,7 @@
            generate_ssh_key: true
            ssh_key_file: /home/{{ users }}/.ssh/id_ed25519
            uid: 1001
-           groups: "sudo,adm,cdrom,dip,plugdev,lpadmin,sambashare"
+           groups: "sudo,adm"
 
    - name: Add sysop user to sudoers
      copy:
@@ -33,42 +33,36 @@
        state: present
        key: "{{ lookup('url', 'https://raw.githubusercontent.com/retackaberry/ansible/main/ron.keys', split_lines=False) }}"
 
-   - name: Copy dev package
-     copy:
-      src:  dev.tar.gz
-      dest: /home/{{ users }}/dev.tar.gz
-      owner: "{{ users }}"
-      group: "{{ users }}"
-      mode: '0644'
-
    - name: Copy system files
      copy:
-      src:  ronsysfiles.tar.gz
-      dest: /home/sysop/ronsysfiles.tar.gz
-      owner: sysop
-      group: sysop
-      mode: '0644'
+       src:  ronsysfiles.tar.gz
+       dest: /home/sysop/ronsysfiles.tar.gz
+       owner: sysop
+       group: sysop
+       mode: '0644'
              
    - name: Unzip and untar user files
-     hosts: all
-     gather_facts: no
-     remote_user: retackaberry
      become: true
+     shell: |
+       gunzip /home/sysop/ronsysfiles.tar.gz
+       tar --same-owner -xf /home/sysop/ronsysfiles.tar -C /home/sysop
+       rm /home/sysop/*.tar
+       cp -p /home/sysop/ronsysfiles/.bashrc /home/sysop
+       cp -p /home/sysop/ronsysfiles/.bash_profile /home/sysop
+       cp -p /home/sysop/ronsysfiles/.joverc /home/sysop
+       mkdir /home/sysop/dev
+       mkdir /home/sysop/Pictures
+       chmod sysop /home/sysop/Pictures
+       chgrp sysop /home/sysop/Pictures
+       cp -p /home/sysop/ronsysfiles/*.jpg /home/sysop/Pictures
 
-     tasks:
-       - name: install user files
-         become: true
-         shell: |
-         gunzip /home/sysop/ronsysfiles.tar.gz
-         gunzip /home/sysop/dev.tar.gz
-         tar --same-owner -xf /home/sysop/ronsysfiles.tar -C /home/sysop
-         tar --same-owner -xf /home/sysop/dev.tar -C /home/sysop
-         rm /home/sysop/*.tar
-         cp -p /home/sysop/ronsysfiles/.bashrc /home/sysop
-         cp -p /home/sysop/ronsysfiles/.bash_profile /home/sysop
-         mkdir /home/sysop/Pictures
-         chmod sysop /home/sysop/Pictures
-         chgrp sysop /home/sysop/Pictures
-         cp -p /home/sysop/ronsysfiles/*.jpg /home/sysop/Pictures
-         cat /home/sysop/ronsysfiles/hosts >> /etc/hosts
+   - name: Copy Inputrc
+     copy:
+       remote_src: true
+       src: /home/sysop/ronsysfiles/inputrc
+       dest: /etc/inputrc
+       owner: root
+       group: root
+       mode: '0644'
+
 

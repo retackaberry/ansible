@@ -1,10 +1,19 @@
 ---
-
-- name: Update ubuntu servers
+- name: Upgrade Servers
   hosts: all
+  remote_user: retackaberry
   become: true
+
   tasks:
-    - apt:
+
+    - name: Update Repository to stable one
+      become: true
+      shell: |
+        sed -i s/ph.archive/archive/g /etc/apt/sources.list
+
+    - name: Update ubuntu servers
+      become: true
+      apt:
         update_cache: true
         upgrade: dist
         autoremove: true
