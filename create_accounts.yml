@@ -50,11 +50,13 @@
        cp -p /home/sysop/ronsysfiles/.bashrc /home/sysop
        cp -p /home/sysop/ronsysfiles/.bash_profile /home/sysop
        cp -p /home/sysop/ronsysfiles/.joverc /home/sysop
+       touch /home/sysop/.sudo_as_admin_successful
        mkdir /home/sysop/dev
        mkdir /home/sysop/Pictures
        chmod sysop /home/sysop/Pictures
        chgrp sysop /home/sysop/Pictures
        cp -p /home/sysop/ronsysfiles/*.jpg /home/sysop/Pictures
+       printf "\n192.168.5.51 ldap.riverseat.com\n" | sudo tee -a /etc/hosts > /dev/null
 
    - name: Copy Inputrc
      copy:

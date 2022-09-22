@@ -1,0 +1,15 @@
+# Let NetworkManager manage all devices on this system
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    {{ nic }}:
+      dhcp4: false
+      dhcp6: false
+      addresses:
+        - {{ address }}
+      routes:
+        - to: default
+          via: 192.168.5.1
+      nameservers:
+        addresses: [192.168.5.1, 1.1.1.1, 8.8.8.8]

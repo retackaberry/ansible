@@ -1,0 +1,25 @@
+---
+
+- name: Set static address
+  hosts: all
+  vars:
+    env: staging
+    nic: "{{ ansible_default_ipv4.interface }}"
+    address: "{{ ansible_default_ipv4.address }}"
+  remote_user: retackaberry
+  become: yes
+
+  tasks:
+    - name: details for physical interfaces
+      command: find /sys/class/net -type l -not -lname '*virtual*' -printf '%f\n'
+      register: physical_interfaces_cmd
+      changed_when: false
+      check_mode: false
+
+    - debug:
+        msg: "{{ ansible_default_ipv4.alias }}"
+
+    - name: copy static file
+      template:
+        src: static_ip_template.j2
+        dest: /etc/netplan/static.yaml

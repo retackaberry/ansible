@@ -1,0 +1,28 @@
+---
+
+- name: Set Nameservers
+  hosts: all
+  become: true
+
+  tasks:
+   - name: Remove old nameserver
+     become: true
+     lineinfile:
+       dest: /etc/resolv.conf
+       state: absent
+       regexp: "^nameserver"
+
+   - name: Set NameServers
+     become: true
+     shell: |
+       echo "nameserver 192.168.5.115" >> /etc/resolv.conf
+       echo "nameserver 1.1.1.1" >> /etc/resolv.conf
+       echo "nameserver 8.8.8.8" >> /etc/resolv.conf
+
+       echo "nameserver 192.168.5.115" >> /etc/resolvconf/resolv.conf.d/head
+       echo "nameserver 1.1.1.1" >> /etc/resolvconf/resolv.conf.d/head
+       echo "nameserver 8.8.8.8" >> /etc/resolvconf/resolv.conf.d/head
+       systemctl enable resolvconf.service
+       systemctl start resolvconf.service
+       systemctl restart resolvconf.service
+
