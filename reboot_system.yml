@@ -1,0 +1,14 @@
+---
+
+- name: Set hostnames
+  hosts: all
+  become: true
+
+  tasks:
+  - name: Reboot host
+    ansible.builtin.reboot:
+      reboot_timeout: 120
+
+
+
+

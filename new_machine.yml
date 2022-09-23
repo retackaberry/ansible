@@ -9,3 +9,4 @@
 - import_playbook: create_accounts.yml
 - import_playbook: set_nameservers.yml
 - import_playbook: set_static_address.yml
+- import_playbook: reboot_system.yml

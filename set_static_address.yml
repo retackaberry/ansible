@@ -16,10 +16,13 @@
       changed_when: false
       check_mode: false
 
-    - debug:
-        msg: "{{ ansible_default_ipv4.alias }}"
-
     - name: copy static file
       template:
         src: static_ip_template.j2
         dest: /etc/netplan/static.yaml
+
+    - name: Restart netplan
+      become: true
+      shell: |
+        netplan apply
+

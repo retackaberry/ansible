@@ -7,7 +7,7 @@ network:
       dhcp4: false
       dhcp6: false
       addresses:
-        - {{ address }}
+        - {{ address }}/24
       routes:
         - to: default
           via: 192.168.5.1
