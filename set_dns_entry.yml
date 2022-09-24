@@ -1,0 +1,31 @@
+---
+
+
+- hosts: servers
+  remote_user: retackaberry
+  become: true
+  vars:
+    hostname: "{{ ansible_hostname}}"
+    address: "{{ ansible_default_ipv4.address }}"
+    macaddress: "{{ ansible_default_ipv4.macaddress|upper }}"
+    entry: "{{ macaddress+' '+hostname }}"
+  
+  tasks:
+
+    - name: Output entry
+      debug:
+        msg:
+          - "Entry is: {{ entry }}"
+          - "Hostname is: {{ hostname }}"
+
+- hosts: dhcp_servers
+  remote_user: pi
+  become: yes
+
+  tasks:
+        
+    - name: Append the dhcp file on pihole  
+      lineinfile:
+        dest: /etc/pihole/custom.list
+        line: "{{ hostvars[ }}"
+        state: present

@@ -1,0 +1,22 @@
+---
+
+- name: Set hostnames
+  hosts: servers
+  remote_user: retackaberry
+  become: true
+  vars:
+    hostname: "{{ ansible_hostname}}"
+    address: "{{ ansible_default_ipv4.address }}"
+    macaddress: "{{ ansible_default_ipv4.macaddress|upper }}"
+
+  tasks:
+  - name: Set each hostname
+    hostname:
+      name: "{{ inventory_hostname }}"
+
+  - name: Build dhcp entries file
+    lineinfile:
+      insertafter: EOF
+      path: /home/retackaberry/foo.txt
+      line: "{{ lookup('template', 'macaddress_template.j2') }}" 
+

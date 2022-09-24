@@ -1,4 +1,5 @@
 [servers]
+pg1
 pg2
 
 [dhcp_servers]
