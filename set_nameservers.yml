@@ -1,7 +1,7 @@
 ---
 
 - name: Set Nameservers
-  hosts: all
+  hosts: servers
   become: true
 
   tasks:

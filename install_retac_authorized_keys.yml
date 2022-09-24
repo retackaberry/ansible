@@ -3,7 +3,7 @@
 # Run this playbook with "ansible-playbook --ask-pass install_retac_authorized_keys.yml"
   
   - name: Install authorized keys for retackaberry account
-    hosts: all
+    hosts: servers
     become: true
 
     tasks:

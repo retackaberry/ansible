@@ -1,3 +1,5 @@
-[all]
-jellyfin
+[servers]
+pg2
 
+[dhcp_servers]
+pihole

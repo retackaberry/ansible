@@ -1,6 +1,6 @@
 ---
 - name: Upgrade Servers
-  hosts: all
+  hosts: servers
   remote_user: retackaberry
   become: true
 

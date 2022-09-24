@@ -1,7 +1,7 @@
 ---
 
 - name: master playbook
-  hosts: all
+  hosts: servers
 
 - import_playbook: set_hostnames.yml
 - import_playbook: upgrade_servers.yml

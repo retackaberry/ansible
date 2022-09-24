@@ -1,6 +1,6 @@
 ---
 - name: Install initial software
-  hosts: all
+  hosts: servers
   remote_user: retackaberry
   become: true
 

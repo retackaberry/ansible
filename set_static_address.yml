@@ -1,7 +1,7 @@
 ---
 
 - name: Set static address
-  hosts: all
+  hosts: servers
   vars:
     env: staging
     nic: "{{ ansible_default_ipv4.interface }}"

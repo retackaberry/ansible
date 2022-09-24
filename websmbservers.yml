@@ -1,7 +1,7 @@
 ---
 
 - name: Setup Web Servers
-  hosts: all
+  hosts: servers
   become: true
 
   tasks:
