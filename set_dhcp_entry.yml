@@ -33,5 +33,4 @@
   - name: Copy the file to pihole
     lineinfile:
       line: "{{ lookup('file','dhcpentry.txt') }}"
-      path: /home/pi/dhcpentry.txt
-
+      path: /etc/dnsmasq.d/04-pihole-static-dhcp.conf
