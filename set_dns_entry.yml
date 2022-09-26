@@ -1,31 +1,37 @@
 ---
-
-
 - hosts: servers
   remote_user: retackaberry
-  become: true
+  become: false
   vars:
-    hostname: "{{ ansible_hostname}}"
+    hostname: "{{ ansible_hostname.split('.')[0]|lower }}"
     address: "{{ ansible_default_ipv4.address }}"
     macaddress: "{{ ansible_default_ipv4.macaddress|upper }}"
     entry: "{{ macaddress+' '+hostname }}"
-  
+
   tasks:
 
-    - name: Output entry
-      debug:
-        msg:
-          - "Entry is: {{ entry }}"
-          - "Hostname is: {{ hostname }}"
+  - name: Empty dnsentry.txt
+    file:
+      path: dnsentry.txt
+      state: absent
+    delegate_to: 127.0.0.1
+    
+  - name: Build dns entries file
+    delegate_to: 127.0.0.1
+    lineinfile:
+      path: dnsentry.txt
+      line: "{{ ansible_default_ipv4.address+' '+ansible_hostname.split('.')[0]|lower }}" 
+      create: yes	
+    with_inventory_hostnames:
+      - servers
 
-- hosts: dhcp_servers
+- hosts: dns_servers
   remote_user: pi
   become: yes
 
   tasks:
-        
-    - name: Append the dhcp file on pihole  
-      lineinfile:
-        dest: /etc/pihole/custom.list
-        line: "{{ hostvars[ }}"
-        state: present
+  - name: Copy the file to pihole
+    lineinfile:
+      line: "{{ lookup('file','dnsentry.txt') }}"
+      path: /home/pi/dnsentry.txt
+

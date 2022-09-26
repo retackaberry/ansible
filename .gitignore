@@ -4,3 +4,7 @@ ronsysfiles.tar.gz
 temp/
 foo
 macaddress_final.j2
+testit
+testit2
+dnsentry.txt
+dhcpentry.txt

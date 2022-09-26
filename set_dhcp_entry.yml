@@ -1,22 +1,37 @@
 ---
-
-- name: Set hostnames
-  hosts: servers
+- hosts: servers
   remote_user: retackaberry
-  become: true
+  become: false
   vars:
-    hostname: "{{ ansible_hostname}}"
+    hostname: "{{ ansible_hostname.split('.')[0]|lower }}"
     address: "{{ ansible_default_ipv4.address }}"
     macaddress: "{{ ansible_default_ipv4.macaddress|upper }}"
+    entry: "{{ macaddress+' '+hostname }}"
 
   tasks:
-  - name: Set each hostname
-    hostname:
-      name: "{{ inventory_hostname }}"
 
-  - name: Build dhcp entries file
+  - name: Empty dhcpentry.txt
+    file:
+      path: dhcpentry.txt
+      state: absent
+    delegate_to: 127.0.0.1
+    
+  - name: Build dns entries file
+    delegate_to: 127.0.0.1
     lineinfile:
-      insertafter: EOF
-      path: /home/retackaberry/foo.txt
-      line: "{{ lookup('template', 'macaddress_template.j2') }}" 
+      path: dhcpentry.txt
+      line: "{{ 'dhcp-host='+ansible_default_ipv4.macaddress|upper+','+ansible_default_ipv4.address+','+ansible_hostname.split('.')[0]|lower }}" 
+      create: yes	
+    with_inventory_hostnames:
+      - servers
+
+- hosts: dhcp_servers
+  remote_user: pi
+  become: yes
+
+  tasks:
+  - name: Copy the file to pihole
+    lineinfile:
+      line: "{{ lookup('file','dhcpentry.txt') }}"
+      path: /home/pi/dhcpentry.txt
 

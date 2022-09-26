@@ -4,3 +4,6 @@ pg2
 
 [dhcp_servers]
 pihole
+
+[dns_servers]
+pihole
